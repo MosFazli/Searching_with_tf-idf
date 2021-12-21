@@ -15,44 +15,50 @@ public class Main {
 //        String list2= new String();
         ArrayList<String> stopWordsList = new ArrayList<>();
 
-  /*      for (int i = 1; i <= 314; i++) {
+        for (int i = 1; i <= 3; i++) {
             //System.out.println(i + "\t" + fileRead(i));
             String address = "E:\\SearchingData_Database\\";
 
             //File f = new File(address + String.valueOf(index) + ".txt");
             if(new File(address + String.valueOf(i) + ".txt").isFile()) {
                 list = fileRead(i);
-                 System.out.println(list);
-                for (int j = 0; j < stopWordsList.size(); j++) {
+                 //System.out.println(list);
+                System.out.println("File number " + i + " added !");
+        /*        for (int j = 0; j < stopWordsList.size(); j++) {
                     list[0] = list[0].replace(stopWordsList.get(j)," ");
                 }
+         */
                 // System.out.println(list1);
                 textFiles.add(list[1]);
                 //System.out.println(list1);
 
             }
         }
-*/
 
 
+/*
         String address = "E:\\SearchingData_Database\\";
 
         //File f = new File(address + String.valueOf(index) + ".txt");
         if(new File(address + String.valueOf(1) + ".txt").isFile()) {
             list = fileRead(1);
             //System.out.println(list);
-   /*         for (int j = 0; j < stopWordsList.size(); j++) {
+            for (int j = 0; j < stopWordsList.size(); j++) {
                 list[0] = list[0].replace(stopWordsList.get(j), " ");
-            }*/
+            }
             // System.out.println(list1);
             textFiles.add(list[1]);
             //System.out.println(list1);
         }
+   */
+
 
 
         Doc doc = new Doc();
         doc.addDoc(textFiles.get(0));
         doc.calculateTF();
+
+
 
         //System.out.println(doc.wordCount);
       /*  for (int i = 0; i < doc.wordsCount; i++) {
@@ -70,6 +76,9 @@ public class Main {
 
 
     }
+
+
+
 
 
 
