@@ -52,6 +52,7 @@ public class Main {
 
         Doc doc = new Doc();
         doc.addDoc(textFiles.get(0));
+        doc.calculateTF();
 
         //System.out.println(doc.wordCount);
       /*  for (int i = 0; i < doc.wordsCount; i++) {
@@ -143,7 +144,9 @@ public class Main {
 class Doc{
 
     public int wordsCount = 0;
+
     LinkedList<String> terms = new LinkedList<>();
+    LinkedList<Integer> termFrequencies = new LinkedList<>();
 
     String[] addDoc(String input){
         int ans = 0;
@@ -158,11 +161,21 @@ class Doc{
         return strings;
     }
 
-    LinkedList<Double> termFrequencies = new LinkedList<>();
+
 
     void calculateTF(){
+        for (int i = 0; i < wordsCount; i++) {
+            int counter = 1;
+            for (int j = i+1; j < wordsCount; j++) {
+                if (terms.get(i).equals(terms.get(j))){
+                    counter++;
+                    terms.remove(j);
+                    wordsCount--;
+                }
+            }
+            termFrequencies.add(counter);
 
-
+        }
 
     }
 
