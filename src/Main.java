@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Main {
 
@@ -47,6 +48,17 @@ public class Main {
             textFiles.add(list[1]);
             //System.out.println(list1);
         }
+
+
+        Doc doc = new Doc();
+        doc.addDoc(textFiles.get(0));
+
+        //System.out.println(doc.wordCount);
+      /*  for (int i = 0; i < doc.wordsCount; i++) {
+            System.out.println(doc.words.get(i));
+        }
+*/
+
 
         for (int i = 0; i < textFiles.size(); i++) {
             System.out.println(textFiles.get(i));
@@ -128,9 +140,33 @@ public class Main {
 }
 
 
-class Document{
+class Doc{
 
-    public int wordCount = 0;
+    public int wordsCount = 0;
+    LinkedList<String> terms = new LinkedList<>();
+
+    String[] addDoc(String input){
+        int ans = 0;
+
+        String[] strings = input.split(" ");
+        wordsCount = strings.length;
+
+        for (int i = 0; i < wordsCount; i++) {
+            terms.add(strings[i]);
+        }
+
+        return strings;
+    }
+
+    LinkedList<Double> termFrequencies = new LinkedList<>();
+
+    void calculateTF(){
+
+
+
+    }
+
+
 
 
 
