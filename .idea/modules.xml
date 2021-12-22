@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SeachingWithTfIdf.iml" filepath="$PROJECT_DIR$/SeachingWithTfIdf.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Searchtfidf.iml" filepath="$PROJECT_DIR$/Searchtfidf.iml" />
     </modules>
   </component>
 </project>

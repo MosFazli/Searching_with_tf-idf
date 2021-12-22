@@ -1,85 +1,150 @@
+import java.io.BufferedReader;
 import java.io.File;
-import java.util.ArrayList;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public double tf(List<String> doc, String term) {
+        double result = 0;
+        for (String word : doc) {
+            if (term.equalsIgnoreCase(word))
+                result++;
+        }
+        return result / doc.size();
+    }
 
+
+    public double idf(List<List<String>> docs, String term) {
+        double n = 0;
+        for (List<String> doc : docs) {
+            for (String word : doc) {
+                if (term.equalsIgnoreCase(word)) {
+                    n++;
+                    break;
+                }
+            }
+        }
+        return Math.log(docs.size() / n);
+    }
+
+
+    public double tfIdf(List<String> doc, List<List<String>> docs, String term) {
+        return tf(doc, term) * idf(docs, term);
+
+    }
+
+    public static void main(String[] args) throws IOException {
+/*
+        List<String> doc1 = Arrays.asList("Lorem", "ipsum", "dolor", "ipsum", "sit", "ipsum");
+        List<String> doc2 = Arrays.asList("Vituperata", "incorrupte", "at", "ipsum", "pro", "quo");
+        List<String> doc3 = Arrays.asList("Has", "persius", "disputationi", "id", "simul");
+        List<List<String>> documents = Arrays.asList(doc1, doc2, doc3);
+ */
 
         String[] list = new String[2];
         ArrayList<String> textFiles = new ArrayList<>();
-//        String list2= new String();
         ArrayList<String> stopWordsList = new ArrayList<>();
 
-        for (int i = 1; i <= 3; i++) {
-            //System.out.println(i + "\t" + fileRead(i));
-            String address = "E:\\SearchingData_Database\\";
+        List<List<String>> documents = new ArrayList<>();
 
+        for (int i = 1; i <= 314; i++) {
+                   String address = "E:\\SearchingData_Database\\";
+            //String address = "E:\\test\\";
             //File f = new File(address + String.valueOf(index) + ".txt");
-            if(new File(address + String.valueOf(i) + ".txt").isFile()) {
+            if (new File(address + String.valueOf(i) + ".txt").isFile()) {
                 list = fileRead(i);
-                 //System.out.println(list);
-                System.out.println("File number " + i + " added !");
+                //System.out.println(list);
+                System.out.println("File number " + i + " added successfully !");
         /*        for (int j = 0; j < stopWordsList.size(); j++) {
                     list[0] = list[0].replace(stopWordsList.get(j)," ");
                 }
          */
-                // System.out.println(list1);
-                textFiles.add(list[1]);
-                //System.out.println(list1);
 
+                String[] strings = list[1].split(" ");
+                List<String> doc = Arrays.asList(strings);
+                documents.add(doc);
+            }
+        }
+
+        Main calculator = new Main();
+
+        List<Double> tfidfs = new ArrayList<>();
+
+
+        String query = "";
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter your query: ");
+        query = scanner.nextLine();
+
+        String[] queryString = query.split(" ");
+        List<String> queryList = Arrays.asList(queryString);
+
+        LinkedList<Double> querytfidfs = new LinkedList<>();
+        List<List<String>> queries = Arrays.asList(queryList);
+        Main calculator2 = new Main();
+
+        for (int i = 0; i < queryList.size(); i++) {
+            //double querytfidf = calculator2.tf(queryList,queryList.get(i));
+            double querytfidf = calculator.tfIdf(queryList, documents, queryList.get(i));
+            querytfidfs.add(querytfidf);
+            //  System.out.println(querytfidf);
+        }
+
+        System.out.println("\n**************************************\n");
+        LinkedList<Double> ans = new LinkedList<>();
+        LinkedList<Integer> answers = new LinkedList<>();
+
+        for (int i = 0; i < documents.size(); i++) {
+            for (int j = 0; j < queryList.size(); j++) {
+                double tfidf = calculator.tfIdf(documents.get(i), documents, queryList.get(j));
+                tfidfs.add(tfidf);
+                // System.out.println(tfidf);
             }
         }
 
 
-/*
-        String address = "E:\\SearchingData_Database\\";
-
-        //File f = new File(address + String.valueOf(index) + ".txt");
-        if(new File(address + String.valueOf(1) + ".txt").isFile()) {
-            list = fileRead(1);
-            //System.out.println(list);
-            for (int j = 0; j < stopWordsList.size(); j++) {
-                list[0] = list[0].replace(stopWordsList.get(j), " ");
+        for (int i = 0; i < documents.size(); i++) {
+            double temp = 0;
+            for (int j = 0; j < querytfidfs.size(); j++) {
+                temp += (querytfidfs.get(j) * tfidfs.get(i));
             }
-            // System.out.println(list1);
-            textFiles.add(list[1]);
-            //System.out.println(list1);
-        }
-   */
-
-
-
-        Doc doc = new Doc();
-        doc.addDoc(textFiles.get(0));
-        doc.calculateTF();
-
-
-
-        //System.out.println(doc.wordCount);
-      /*  for (int i = 0; i < doc.wordsCount; i++) {
-            System.out.println(doc.words.get(i));
-        }
-*/
-
-
-        for (int i = 0; i < textFiles.size(); i++) {
-            System.out.println(textFiles.get(i));
+            // System.out.println(temp);
+            ans.add(temp);
         }
 
-        
 
+        LinkedList<Integer> indexes = new LinkedList<>();
+        for (int j = 0; j < ans.size(); j++) {
+            double max = -1;
+            int index = 0;
+            for (int i = 0; i < ans.size(); i++) {
+                if (ans.get(i) >= max && !indexes.contains(i)) {
+                    max = ans.get(i);
+                    index = i;
+                }
+            }
+            indexes.add(index);
+            answers.add(index);
+        }
+
+        if (answers.size() > 10) {
+            for (int i = 0; i < 10; i++) {
+                System.out.println(documents.get(answers.get(i)));
+            }
+        }else {
+            for (int i = 0; i < answers.size(); i++) {
+                System.out.println(documents.get(answers.get(i)));
+            }
+        }
+
+
+
+        //    System.out.println("TF-IDF (ipsum) = " + tfidf);
 
 
     }
-
-
-
-
 
 
     public static String[] fileRead(int index) throws IOException {
@@ -89,31 +154,27 @@ public class Main {
 
         File file = new File(address + String.valueOf(index) + ".txt");
 
-        // Note:  Double backquote is to avoid compiler
-        // interpret words
-        // like \test as \t (ie. as a escape sequence)
-
         // Creating an object of BufferedReader class
         BufferedReader br = null;
 
-        if(new FileReader(file) != null) {
+        if (new FileReader(file) != null) {
             br = new BufferedReader(new FileReader(file));
         }
 
         // Declaring a string variable
         String st;
-        String contain="";
-        String contain2="";
+        String contain = "";
+        String contain2 = "";
         int flag = 0, lineZero = 0;
         // Consition holds true till
         // there is character in a string
         while ((st = br.readLine()) != null) {
             // Print the string
-            if(st.contains("###")){
+            if (st.contains("###")) {
                 flag++;
             }
 
-            if(flag == 1 && lineZero != 0) {
+            if (flag == 1 && lineZero != 0) {
 //                PorterStemmer stem = new PorterStemmer();
 //                stem.setCurrent(contain);
 //                stem.stem();
@@ -123,13 +184,13 @@ public class Main {
                 String[] words = st.split(" ");
                 ArrayList<String> wordsLine = new ArrayList<>();
                 for (int i = 0; i < words.length; i++) {
-                    if(words[i].length() > 5){
+                    if (words[i].length() > 5) {
                         String temp = "";
                         for (int j = 0; j < 5; j++) {
                             temp = temp + words[i].charAt(j);
                         }
                         wordsLine.add(temp);
-                    }else{
+                    } else {
                         wordsLine.add(words[i]);
                     }
                 }
@@ -146,50 +207,6 @@ public class Main {
         return a;
 
     }
-
-}
-
-
-class Doc{
-
-    public int wordsCount = 0;
-
-    LinkedList<String> terms = new LinkedList<>();
-    LinkedList<Integer> termFrequencies = new LinkedList<>();
-
-    String[] addDoc(String input){
-        int ans = 0;
-
-        String[] strings = input.split(" ");
-        wordsCount = strings.length;
-
-        for (int i = 0; i < wordsCount; i++) {
-            terms.add(strings[i]);
-        }
-
-        return strings;
-    }
-
-
-
-    void calculateTF(){
-        for (int i = 0; i < wordsCount; i++) {
-            int counter = 1;
-            for (int j = i+1; j < wordsCount; j++) {
-                if (terms.get(i).equals(terms.get(j))){
-                    counter++;
-                    terms.remove(j);
-                    wordsCount--;
-                }
-            }
-            termFrequencies.add(counter);
-
-        }
-
-    }
-
-
-
 
 
 }
