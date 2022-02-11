@@ -50,7 +50,7 @@ public class Main {
         List<List<String>> documents = new ArrayList<>();
 
         for (int i = 1; i <= 314; i++) {
-                   String address = "E:\\SearchingData_Database\\";
+                   String address = "E:\\GitHub\\Searching_with_tf-idf\\SearchingData_Database\\";
             //String address = "E:\\test\\";
             //File f = new File(address + String.valueOf(index) + ".txt");
             if (new File(address + String.valueOf(i) + ".txt").isFile()) {
@@ -150,7 +150,7 @@ public class Main {
     public static String[] fileRead(int index) throws IOException {
         // File path is passed as parameter
 
-        String address = "E:\\SearchingData_Database\\";
+        String address = "E:\\GitHub\\Searching_with_tf-idf\\SearchingData_Database\\";
 
         File file = new File(address + String.valueOf(index) + ".txt");
 
